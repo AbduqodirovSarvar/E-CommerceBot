@@ -1,5 +1,6 @@
 ﻿using Bot.Application.Interfaces;
 using Bot.Application.Services.StateManagement;
+using Bot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
+using User = Bot.Domain.Entities.User;
 
 namespace Bot.Application.Services.HandleServices
 {
@@ -19,30 +21,31 @@ namespace Bot.Application.Services.HandleServices
         private readonly IMainMenuService _mainMenuService;
         private readonly IOrderService _orderService;
         private readonly IFeedbackService _feedbackService;
-        private readonly IContactService _contactService;
         private readonly IInformationService _informationService;
         private readonly ISettingService _settingService;
-        private readonly ICheckUserService _checkUserService;
+        private readonly IRedisService _redisService;
+        private readonly IAppDbContext _context;
         public UpdateHander(
             ILogger<UpdateHander> logger,
             IRegisterService registerService,
             IMainMenuService mainMenuService,
             IOrderService orderService,
             IFeedbackService feedbackService,
-            IContactService contactService,
             IInformationService informationService,
             ISettingService settingService,
-            ICheckUserService checkUserService )
+            IRedisService redisService,
+            IAppDbContext appDbContext
+            )
         {
             _logger = logger;
             _registerService = registerService;
             _mainMenuService = mainMenuService;
             _orderService = orderService;
             _feedbackService = feedbackService;
-            _contactService = contactService;
             _informationService = informationService;
             _settingService = settingService;
-            _checkUserService = checkUserService;
+            _redisService = redisService;
+            _context = appDbContext;
         }
         
 
@@ -61,34 +64,38 @@ namespace Bot.Application.Services.HandleServices
 
         private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
         {
-            if(!await _checkUserService.CheckUserRegistered(message.Chat.Id, cancellationToken))
+            User? user = await _redisService.GetObjectAsync<User>($"{message.Chat.Id}");
+            if (user == null)
             {
-                await _registerService.CatchMessage(message, cancellationToken);
-                return;
+                user = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.Chat.Id, cancellationToken);
+                if(user == null)
+                {
+                    await _registerService.CatchMessage(message, cancellationToken);
+                    return;
+                }
+                await _redisService.SetObjectAsync(user.Id.ToString(), user);
             }
 
             var userState = StateService.Get(message.Chat.Id);
             var forward = userState switch
             {
-                "order" => _orderService.CatchMessage(message, userState, cancellationToken),
-                "order:delivery" => _orderService.CatchMessage(message, userState, cancellationToken),
-                "order:takeaway" => _orderService.CatchMessage(message, userState, cancellationToken),
-                "order:delivery:address" => _orderService.CatchMessage(message, userState, cancellationToken),
-                "order:delivery:confirmationaddress" => _orderService.CatchMessage(message, userState, cancellationToken),
+                "order" => _orderService.CatchMessage(message, user, userState, cancellationToken),
+                "order:delivery" => _orderService.CatchMessage(message, user, userState, cancellationToken),
+                "order:takeaway" => _orderService.CatchMessage(message, user, userState, cancellationToken),
+                "order:delivery:address" => _orderService.CatchMessage(message, user, userState, cancellationToken),
+                "order:delivery:confirmationaddress" => _orderService.CatchMessage(message, user, userState, cancellationToken),
 
-                "feedback" => _feedbackService.CatchMessage(message, userState, cancellationToken),
+                "feedback" => _feedbackService.CatchMessage(message, user, userState, cancellationToken),
 
-                "contact" => _contactService.CatchMessage(message, userState, cancellationToken),
+                "information" => _informationService.CatchMessage(message, user, userState, cancellationToken),
+                "information:filial" => _informationService.CatchMessage(message, user, userState, cancellationToken),
 
-                "information" => _informationService.CatchMessage(message, userState, cancellationToken),
-                "information:filial" => _informationService.CatchMessage(message, userState, cancellationToken),
+                "setting" => _settingService.CatchMessage(message, user, userState, cancellationToken),
+                "setting:changename" => _settingService.CatchMessage(message, user, userState, cancellationToken),
+                "setting:changephone" => _settingService.CatchMessage(message, user, userState, cancellationToken),
+                "setting:changelanguage" => _settingService.CatchMessage(message, user, userState, cancellationToken),
 
-                "setting" => _settingService.CatchMessage(message, userState, cancellationToken),
-                "setting:changename" => _settingService.CatchMessage(message, userState, cancellationToken),
-                "setting:changephone" => _settingService.CatchMessage(message, userState, cancellationToken),
-                "setting:changelanguage" => _settingService.CatchMessage(message, userState, cancellationToken),
-
-                _ => _mainMenuService.CatchMessage(message, cancellationToken)
+                _ => _mainMenuService.CatchMessage(message, user, cancellationToken)
             };
             await forward;
             return;

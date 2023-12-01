@@ -9,6 +9,8 @@ namespace Bot.Domain.Entities
     public class ProductType
     {
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
+        public string NameUZ { get; set; } = null!;
+        public string NameEN { get; set; } = null!;
+        public string NameRU { get; set; } = null!;
     }
 }

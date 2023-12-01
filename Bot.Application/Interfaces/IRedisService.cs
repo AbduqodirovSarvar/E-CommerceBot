@@ -11,5 +11,7 @@ namespace Bot.Application.Interfaces
         Task<string?> GetAsync(string key);
         Task SetAsync(string key, string value);
         Task DeleteAsync(string key);
+        Task<T?> GetObjectAsync<T>(string key) where T: class;
+        Task SetObjectAsync<T>(string key, T obj) where T : class;
     }
 }

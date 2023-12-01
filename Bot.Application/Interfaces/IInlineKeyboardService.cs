@@ -9,6 +9,6 @@ namespace Bot.Application.Interfaces
 {
     public interface IInlineKeyboardService
     {
-        InlineKeyboardMarkup CreateKeyboardMarkup(Dictionary<string, string> options, int? row);
+        InlineKeyboardMarkup CreateKeyboardMarkup(Dictionary<string, string> options, int? row = 2);
     }
 }

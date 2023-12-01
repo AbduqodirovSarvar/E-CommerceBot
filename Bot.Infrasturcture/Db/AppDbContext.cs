@@ -12,6 +12,9 @@ namespace Bot.Infrasturcture.Db
 {
     public class AppDbContext : DbContext, IAppDbContext
     {
+        public AppDbContext(DbContextOptions options) 
+            : base(options) { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Filial> Filials { get; set; }
         public DbSet<Order> Orders { get; set; }

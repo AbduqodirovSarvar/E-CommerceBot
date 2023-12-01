@@ -28,9 +28,11 @@ namespace Bot.Application
             _services.AddScoped<IMainMenuService, MainMenuService>();
             _services.AddScoped<IOrderService, OrderService>();
             _services.AddScoped<IFeedbackService, FeedbackService>();
-            _services.AddScoped<IContactService, ContactService>();
             _services.AddScoped<IInformationService, InformationService>();
-            _services.AddScoped<ICheckUserService, CheckUserService>();
+            _services.AddScoped<IMainMenuService, MainMenuService>();
+            _services.AddScoped<ISettingService, SettingsService>();
+            _services.AddScoped<IUpdateHandler, UpdateHander>();
+            _services.AddScoped<IRegisterService, RegisterService>();
             return _services;
         }
     }

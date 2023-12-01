@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StackExchange.Redis;
+using Newtonsoft.Json;
 
 namespace Bot.Application.Services.CacheServices
 {
@@ -28,9 +29,26 @@ namespace Bot.Application.Services.CacheServices
             return value;
         }
 
+        public async Task<T?> GetObjectAsync<T>(string key) where T : class
+        {
+            var value = await _db.StringGetAsync(key);
+            if (value.HasValue)
+            {
+                return JsonConvert.DeserializeObject<T?>(value!);
+            }
+            return null;
+        }
+
         public async Task SetAsync(string key, string value)
         {
             await _db.StringSetAsync(key, value);
+            await _db.KeyExpireAsync(key, TimeSpan.FromDays(1));
+        }
+
+        public async Task SetObjectAsync<T>(string key, T obj) where T : class
+        {
+            var stringJson = JsonConvert.SerializeObject(obj);
+            await _db.StringSetAsync(key, stringJson);
             await _db.KeyExpireAsync(key, TimeSpan.FromDays(1));
         }
     }

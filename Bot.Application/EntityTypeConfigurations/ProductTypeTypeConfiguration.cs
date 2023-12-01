@@ -13,7 +13,9 @@ namespace Bot.Application.EntityTypeConfigurations
     {
         public void Configure(EntityTypeBuilder<ProductType> builder)
         {
-            builder.HasIndex(x => x.Name).IsUnique();
+            builder.HasIndex(x => x.NameUZ).IsUnique();
+            builder.HasIndex(x => x.NameEN).IsUnique();
+            builder.HasIndex(x => x.NameRU).IsUnique();
         }
     }
 }

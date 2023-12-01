@@ -12,7 +12,6 @@ namespace Bot.Application.Models
         public static readonly string RouteSection = "BotConfiguration:Route";
         public string Token { get; set; } = null!;
         public string HostAddress { get; set; } = null!;
-        public string AdminTelegramIds { get; set; } = null!;
         public string SecretKey { get; set; } = null!;
         public string Route { get; set; } = null!;
     }
