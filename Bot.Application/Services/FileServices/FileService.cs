@@ -16,19 +16,20 @@ namespace Bot.Application.Services.FileServices
         {
             _logger = logger;
         }
+
         public async Task<string?> Save(IFormFile file)
         {
             try
             {
-                string folderPath = Directory.GetCurrentDirectory();
+                string currentFolderPath = Directory.GetCurrentDirectory();
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string filePath = Path.Combine(folderPath, "..", "Bot.Application", "Files", "Images", fileName);
-                string fp = Path.GetFullPath(filePath);
-                using (var stream = new FileStream(fp, FileMode.Create))
+                string filePath = Path.Combine(currentFolderPath, "..", "Bot.Application", "Files", "Images", fileName);
+                string fullPath = Path.GetFullPath(filePath);
+                using (var stream = new FileStream(fullPath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
-                return fileName;
+                return fullPath;
             }
             catch (Exception ex)
             {
@@ -37,11 +38,11 @@ namespace Bot.Application.Services.FileServices
             }
         }
 
-        public Stream? Get(string fileName)
+        public Stream? Get(string fullFilePath)
         {
             try
             {
-                using var stream = File.OpenRead(fileName);
+                using var stream = File.OpenRead(fullFilePath);
                 return stream;
             }
             catch
@@ -49,5 +50,6 @@ namespace Bot.Application.Services.FileServices
                 return null;
             }
         }
+
     }
 }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Telegram.Bot.Types;
 
 namespace Bot.Application.Interfaces
 {
-    public interface ISettingService
+    public interface IRedisService
     {
-        Task CatchMessage(Message message, string state, CancellationToken cancellationToken);
+        Task<string?> GetAsync(string key);
+        Task SetAsync(string key, string value);
+        Task DeleteAsync(string key);
     }
 }

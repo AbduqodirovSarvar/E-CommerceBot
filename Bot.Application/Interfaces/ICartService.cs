@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bot.Application.Interfaces
 {
-    public class ICartService
+    public interface ICartService
     {
     }
 }

@@ -11,6 +11,10 @@ namespace Bot.Application.Interfaces
     public interface IAppDbContext
     {
         DbSet<User> Users { get; set; }
+        DbSet<Filial> Filials { get; set; }
+        DbSet<Order> Orders { get; set; }
+        DbSet<Product> Products { get; set; }
+        DbSet<ProductType> ProductTypes { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken=default);
     }

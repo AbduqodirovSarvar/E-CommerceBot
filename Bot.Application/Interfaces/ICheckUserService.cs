@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Telegram.Bot.Types;
 
 namespace Bot.Application.Interfaces
 {
-    public interface ISettingService
+    public interface ICheckUserService
     {
-        Task CatchMessage(Message message, string state, CancellationToken cancellationToken);
+        Task<bool> CheckUserRegistered(long id, CancellationToken cancellationToken);
     }
 }

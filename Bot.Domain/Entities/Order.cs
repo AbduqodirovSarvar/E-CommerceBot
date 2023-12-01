@@ -14,7 +14,7 @@ namespace Bot.Domain.Entities
         public int ProductId { get; set; }
         public Product? Product { get; set; }
         public int Amount { get; set; }
-        public string? Location { get; set; }
+        public string Location { get; set; } = null!;
 
         public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
     }

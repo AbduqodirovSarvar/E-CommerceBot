@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.Application.EntityTypeConfigurations
+namespace Bot.Application.Services.HandleServices
 {
-    public class UserTypeConfiguration
+    public class MenuButtonsServices
     {
 
     }

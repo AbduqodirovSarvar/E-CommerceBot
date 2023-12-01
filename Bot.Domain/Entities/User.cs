@@ -14,6 +14,7 @@ namespace Bot.Domain.Entities
         public string Phone { get; set; } = null!;
         public Language Language { get; set; }
 
+        public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
         public DateTime CreatedTime { get; set; } = DateTime.UtcNow;
     }
 }

@@ -13,5 +13,9 @@ namespace Bot.Domain.Entities
         public string? Description { get; set; }
         public double Price { get; set; }
         public string? ImagePath { get; set; }
+        public int TypeId { get; set; }
+        public ProductType? Type { get; set; }
+
+        public ICollection<Order> Orders { get; set; } = new HashSet<Order>();
     }
 }
