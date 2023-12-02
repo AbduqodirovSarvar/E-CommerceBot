@@ -1,6 +1,8 @@
 ﻿using Bot.Application.Interfaces;
+using Bot.Application.Services.KeyboardServices;
 using Bot.Application.Services.StateManagement;
 using Bot.Domain.Entities;
+using Bot.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -101,14 +103,33 @@ namespace Bot.Application.Services.HandleServices
             return;
         }
 
-        private Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery, CancellationToken cancellationToken)
+        private async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            User? user = await _redisService.GetObjectAsync<User>($"{callbackQuery.From.Id}");
+            if (user == null)
+            {
+                user = await _context.Users.FirstOrDefaultAsync(x => x.Id == callbackQuery.From.Id, cancellationToken);
+                if (user == null)
+                {
+                    await _registerService.ReceivedStartCommand(callbackQuery.From.Id, cancellationToken);
+                    return;
+                }
+                await _redisService.SetObjectAsync(user.Id.ToString(), user);
+            }
+
+            var userState = StateService.Get(callbackQuery.From.Id);
+
+            var forward = userState switch
+            {
+                _ => _informationService.CatchCallbackData(callbackQuery, user, userState, cancellationToken),
+            };
+            await forward;
+            return;
         }
 
         private Task UnknownUpdateHandlerAsync(Update update, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task HandleErrorAsync(Exception exception, CancellationToken cancellationToken)

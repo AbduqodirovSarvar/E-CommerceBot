@@ -11,19 +11,28 @@ namespace Bot.Application.Services.HandleServices
 {
     public class InformationService : IInformationService
     {
-        public async Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken)
+        private readonly IAppDbContext _context;
+        private readonly IInlineKeyboardService _inlineKeyboardService;
+        private readonly IMainMenuService _mainMenuService;
+        public InformationService(
+            IAppDbContext context,
+            IInlineKeyboardService inlineKeyboardService,
+            IMainMenuService mainMenuService)
         {
-            var forward = message.Text! switch
-            {
-                _ => ClickFilialButton(message, user, state, cancellationToken),
-            };
-            await forward;
+            _context = context;
+            _inlineKeyboardService = inlineKeyboardService;
+            _mainMenuService = mainMenuService;
         }
 
-        private Task ClickFilialButton(Message message, User user, string state, CancellationToken cancellationToken)
+        public async Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken)
         {
+            await _mainMenuService.CatchMessage(message, user, cancellationToken);
+            return;
+        }
 
-            throw new NotImplementedException();
+        public async Task CatchCallbackData(CallbackQuery query, User user, string state, CancellationToken cancellationToken)
+        {
+            
         }
     }
 }

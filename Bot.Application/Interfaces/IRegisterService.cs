@@ -10,5 +10,6 @@ namespace Bot.Application.Interfaces
     public interface IRegisterService
     {
         Task CatchMessage(Message message, CancellationToken cancellationToken);
+        Task ReceivedStartCommand(long chatId, CancellationToken cancellationToken);
     }
 }

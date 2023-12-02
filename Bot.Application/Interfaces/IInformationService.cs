@@ -11,5 +11,6 @@ namespace Bot.Application.Interfaces
     public interface IInformationService
     {
         Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken);
+        Task CatchCallbackData(CallbackQuery query, User user, string state, CancellationToken cancellationToken);
     }
 }

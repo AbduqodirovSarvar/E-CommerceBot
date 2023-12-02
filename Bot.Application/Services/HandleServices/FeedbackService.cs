@@ -16,15 +16,19 @@ namespace Bot.Application.Services.HandleServices
     public class FeedbackService : IFeedbackService
     {
         private readonly ITelegramBotClient _client;
+        private readonly IMainMenuService _mainMenuService;
         public FeedbackService(
-            ITelegramBotClient client)
+            ITelegramBotClient client,
+            IMainMenuService mainMenuService)
         {
             _client = client;
+            _mainMenuService = mainMenuService;
         }
         public async Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken)
         {
             await ForwardToAdmins(new List<long> { 636809820 }, message, user, cancellationToken);
-            await StateService.Delete(message.Chat.Id);
+            await _mainMenuService.ShowMainMenu(message, user, cancellationToken);
+
             return;
         }
 
@@ -41,12 +45,6 @@ namespace Bot.Application.Services.HandleServices
                         fromChatId: message.Chat.Id,
                         messageId: message.MessageId,
                         cancellationToken: cancellationToken);
-                await _client.SendTextMessageAsync(
-                    chatId: message.Chat.Id,
-                    text: AllTexts.Messages[5, (int)user.Language],
-                    cancellationToken: cancellationToken);
-
-                //await _menuButtonServices.ShowMainMenu(message, user, cancellationToken);
             }
             return;
         }

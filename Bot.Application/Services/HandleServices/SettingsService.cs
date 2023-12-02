@@ -18,22 +18,25 @@ namespace Bot.Application.Services.HandleServices
     public class SettingsService : ISettingService
     {
         private readonly IAppDbContext _context;
-        private readonly IMainMenuService _menuService;
         private readonly IRedisService _redisService;
         private readonly ITelegramBotClient _client;
         private readonly IReplyKeyboardService _replyKeyboardService;
+        private readonly IMainMenuService _mainMenuService;
+        private readonly IRegisterService _registerService;
         public SettingsService(
             IAppDbContext context, 
             IMainMenuService mainMenuService,
             IRedisService redisService,
             ITelegramBotClient telegramBotClient, 
-            IReplyKeyboardService replyKeyboardService)
+            IReplyKeyboardService replyKeyboardService,
+            IRegisterService registerService)
         {
              _context = context;
-            _menuService = mainMenuService;
+            _mainMenuService = mainMenuService;
             _redisService = redisService;
             _client = telegramBotClient;
             _replyKeyboardService = replyKeyboardService;
+            _registerService = registerService;
         }
         public async Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken)
         {
@@ -43,7 +46,7 @@ namespace Bot.Application.Services.HandleServices
                 "setting:changename" => ReceivedNewName(message, user, state, cancellationToken),
                 "setting:changephone" => ReceivedNewPhone(message, user, state, cancellationToken),
                 "setting:changelanguage" => ReceivedNewLanguage(message, user,state, cancellationToken),
-                _ => ShowSettingsMenu(message, user, state, cancellationToken),
+                _ => _mainMenuService.ClickSettingsButton(message, user, cancellationToken),
             };
             await forward;
             return;
@@ -57,7 +60,7 @@ namespace Bot.Application.Services.HandleServices
                 "Telefon raqamni o'zgartish" or "Change phone number" or "Изменить номер телефона" => ClickChangePhoneButton(message, user, state, cancellationToken),
                 "Tilni o'zgartirish" or "Change language" or "Изменить язык" => ClickChangelanguageButton(message, user, state, cancellationToken),
                 "Orqaga" or "Back" or "Назад" => ClickBackButton(message, user, state, cancellationToken),
-                _ => ShowSettingsMenu(message, user, state, cancellationToken)
+                _ => _mainMenuService.ClickSettingsButton(message, user, cancellationToken)
             };
             await forward;
             return;
@@ -65,25 +68,15 @@ namespace Bot.Application.Services.HandleServices
 
         private async Task ClickBackButton(Message message, User user, string state, CancellationToken cancellationToken)
         {
-            await _menuService.ShowMainMenu(message, user, cancellationToken);
+            await _mainMenuService.ShowMainMenu(message, user, cancellationToken);
             return;
-        }
-
-        private async Task ShowSettingsMenu(Message message, User user, string state, CancellationToken cancellationToken)
-        {
-            //var a = AllTexts.SettingsMenuButtons[1].ToList();
-            await _client.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: AllTexts.Messages[2, (int)user.Language],
-                replyMarkup: _replyKeyboardService.CreateKeyboardMarkup(new List<string> { }),
-                cancellationToken: cancellationToken);
         }
 
         private async Task ClickChangelanguageButton(Message message, User user, string state, CancellationToken cancellationToken)
         {
             await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: AllTexts.Messages[2, (int)user.Language],
+                text: ReplyMessages.askChoosingLanguage[(int)user.Language],
                 replyMarkup: _replyKeyboardService.CreateKeyboardMarkup(Enum.GetNames<Language>().ToList()),
                 cancellationToken: cancellationToken);
 
@@ -95,8 +88,8 @@ namespace Bot.Application.Services.HandleServices
         {
             await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: AllTexts.Messages[3, (int)user.Language],
-                replyMarkup: _replyKeyboardService.CreateContactRequestKeyboardMarkup(AllTexts.ShareContactButtons[0, (int)user.Language]),
+                text: ReplyMessages.askContact[(int)user.Language],
+                replyMarkup: _replyKeyboardService.CreateContactRequestKeyboardMarkup(ReplyMessages.ShareContactButtons[(int)user.Language]),
                 cancellationToken: cancellationToken);
 
             await StateService.Set(message.Chat.Id, "setting:changephone");
@@ -107,7 +100,7 @@ namespace Bot.Application.Services.HandleServices
         {
             await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: AllTexts.Messages[1, (int)user.Language],
+                text: ReplyMessages.askFullName[(int)user.Language],
                 replyMarkup: new ReplyKeyboardRemove(),
                 cancellationToken: cancellationToken);
 
@@ -120,7 +113,7 @@ namespace Bot.Application.Services.HandleServices
             var userObject = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.Chat.Id, cancellationToken);
             if (userObject == null)
             {
-                await CatchMessage(message, user, state, cancellationToken);
+                await _registerService.CatchMessage(message, cancellationToken);
                 return;
             }
 
@@ -135,8 +128,7 @@ namespace Bot.Application.Services.HandleServices
             await _context.SaveChangesAsync(cancellationToken);
             await _redisService.SetObjectAsync(userObject.Id.ToString(), userObject);
 
-            await ShowSettingsMenu(message, user, state, cancellationToken);
-            await StateService.Set(message.Chat.Id, "setting");
+            await _mainMenuService.ClickSettingsButton(message, user, cancellationToken);
             return;
         }
 
@@ -145,7 +137,7 @@ namespace Bot.Application.Services.HandleServices
             var userObject = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.Chat.Id, cancellationToken);
             if (userObject == null)
             {
-                await CatchMessage(message, user, state, cancellationToken);
+                await _registerService.CatchMessage(message, cancellationToken);
                 return;
             }
             try
@@ -160,8 +152,7 @@ namespace Bot.Application.Services.HandleServices
             await _context.SaveChangesAsync(cancellationToken);
             await _redisService.SetObjectAsync(userObject.Id.ToString(), userObject);
 
-            await ShowSettingsMenu(message, user, state, cancellationToken);
-            await StateService.Set(message.Chat.Id, "setting");
+            await _mainMenuService.ClickSettingsButton(message, user, cancellationToken);
             return;
         }
 
@@ -170,15 +161,14 @@ namespace Bot.Application.Services.HandleServices
             var userObject = await _context.Users.FirstOrDefaultAsync(x => x.Id == message.Chat.Id, cancellationToken);
             if (userObject == null)
             {
-                await CatchMessage(message, user, state, cancellationToken);
+                await _registerService.CatchMessage(message, cancellationToken);
                 return;
             }
             userObject.FullName = message.Text!;
             await _context.SaveChangesAsync(cancellationToken);
             await _redisService.SetObjectAsync(userObject.Id.ToString(), userObject);
 
-            await ShowSettingsMenu(message, user, state, cancellationToken);
-            await StateService.Set(message.Chat.Id, "setting");
+            await _mainMenuService.ClickSettingsButton(message, user, cancellationToken);
             return;
         }
 
