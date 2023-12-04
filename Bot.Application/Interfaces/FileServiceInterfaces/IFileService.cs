@@ -6,12 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.FileServiceInterfaces
 {
     public interface IFileService
     {
         Task<string?> Save(IFormFile file);
-        Stream? Get(string fileName);
+        FileStream? Get(string fileName);
         
     }
 }

@@ -2,8 +2,8 @@ using Bot.Api.Controllers;
 using Bot.Api.Services;
 using Bot.Application;
 using Bot.Application.Models;
-using Bot.Infrasturcture;
-using Bot.Infrasturcture.Db;
+using Bot.Infrastructure;
+using Bot.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

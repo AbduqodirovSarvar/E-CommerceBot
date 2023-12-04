@@ -1,5 +1,4 @@
-﻿using Bot.Application.Interfaces;
-using IDatabase = StackExchange.Redis.IDatabase;
+﻿using IDatabase = StackExchange.Redis.IDatabase;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using StackExchange.Redis;
 using Newtonsoft.Json;
+using Bot.Application.Interfaces.DbInterfaces;
 
 namespace Bot.Application.Services.CacheServices
 {

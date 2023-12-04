@@ -1,4 +1,7 @@
 ﻿using Bot.Application.Interfaces;
+using Bot.Application.Interfaces.DbInterfaces;
+using Bot.Application.Interfaces.HandleInterfaces;
+using Bot.Application.Interfaces.KeyboardServiceInterfaces;
 using Bot.Application.Services.KeyboardServices;
 using Bot.Application.Services.StateManagement;
 using Bot.Domain.Enums;
@@ -128,7 +131,7 @@ namespace Bot.Application.Services.HandleServices
             await _context.SaveChangesAsync(cancellationToken);
             await _redisService.SetObjectAsync(userObject.Id.ToString(), userObject);
 
-            await _mainMenuService.ClickSettingsButton(message, user, cancellationToken);
+            await _mainMenuService.ClickSettingsButton(message, userObject, cancellationToken);
             return;
         }
 

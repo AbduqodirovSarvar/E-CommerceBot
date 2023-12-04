@@ -1,4 +1,7 @@
 ﻿using Bot.Application.Interfaces;
+using Bot.Application.Interfaces.DbInterfaces;
+using Bot.Application.Interfaces.HandleInterfaces;
+using Bot.Application.Interfaces.KeyboardServiceInterfaces;
 using Bot.Application.Services.KeyboardServices;
 using Bot.Application.Services.StateManagement;
 using Bot.Domain.Entities;
@@ -52,7 +55,8 @@ namespace Bot.Application.Services.HandleServices
 
         public async Task ShowMainMenu(Message message, User user, CancellationToken cancellationToken)
         {
-            List<string> keyboardsList = Enumerable.Range(0, ReplyMessages.MainMenuButtons.GetLength(0))
+            var length = ReplyMessages.MainMenuButtons.GetLength(1);
+            List<string> keyboardsList = Enumerable.Range(0, length)
                                               .Select(x => ReplyMessages.MainMenuButtons[(int)user.Language, x])
                                                 .ToList();
 
@@ -68,7 +72,7 @@ namespace Bot.Application.Services.HandleServices
 
         public async Task ClickOrderButton(Message message, User user, CancellationToken cancellationToken)
         {
-            List<string> keyboardsList = Enumerable.Range(0, ReplyMessages.OrderMenuButtons.GetLength(0))
+            List<string> keyboardsList = Enumerable.Range(0, ReplyMessages.OrderMenuButtons.GetLength(1))
                                               .Select(x => ReplyMessages.OrderMenuButtons[(int)user.Language, x])
                                                 .ToList();
 
@@ -107,17 +111,31 @@ namespace Bot.Application.Services.HandleServices
         public async Task CLickInformationButton(Message message, User user, CancellationToken cancellationToken)
         {
             var filials = await _context.Filials.ToListAsync(cancellationToken);
-            Dictionary<string, string> dict = user.Language switch
+            Dictionary<string, string> dict1 = user.Language switch
             {
                 Language.uz => filials.ToDictionary(x => x.NameUZ, x => x.Id.ToString()),
                 Language.ru => filials.ToDictionary(x => x.NameRU, x => x.Id.ToString()),
                 _ => filials.ToDictionary(x => x.NameEN, x => x.Id.ToString())
             };
 
+            var dict2 = user.Language switch
+            {
+                Language.uz => new Dictionary<string, string> { { "Avvalgi", "back" }, { "Keyingi", "next" } },
+                Language.en => new Dictionary<string, string> { { "Back", "back" }, { "Next", "next" } },
+                _ => new Dictionary<string, string> { { "Бывший", "back" }, { "Следующий", "next" } },
+            };
+
+
             await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: ReplyMessages.chooseFilial[(int)user.Language],
-                replyMarkup: _inlineKeyboardService.CreateKeyboardMarkup(dict),
+                replyMarkup: _inlineKeyboardService.CreateKeyboardMarkup(dict1),
+                cancellationToken: cancellationToken);
+
+            await _client.SendTextMessageAsync(
+                chatId: message.Chat.Id,
+                text: "",
+                replyMarkup: _inlineKeyboardService.CreateKeyboardMarkup(dict1),
                 cancellationToken: cancellationToken);
 
             await StateService.Set(message.Chat.Id, "information");
@@ -126,7 +144,7 @@ namespace Bot.Application.Services.HandleServices
 
         public async Task ClickSettingsButton(Message message, User user, CancellationToken cancellationToken)
         {
-            List<string> keyboardsList = Enumerable.Range(0, ReplyMessages.SettingsMenuButtons.GetLength(0))
+            List<string> keyboardsList = Enumerable.Range(0, ReplyMessages.SettingsMenuButtons.GetLength(1))
                                               .Select(x => ReplyMessages.SettingsMenuButtons[(int)user.Language, x])
                                                 .ToList();
 

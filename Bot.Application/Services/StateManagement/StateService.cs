@@ -23,9 +23,17 @@ namespace Bot.Application.Services.StateManagement
             "setting:changelanguage", // 11
             "order", // 12
             "order:delivery", // 13
-            "order:takeaway", // 14
-            "order:delivery:address", // 15
-            "order:delivery:confirmationaddress" // 16
+            "order:delivery:address", // 14
+            "order:delivery:confirmationaddress", // 15
+            "order:delivery:confirmationaddress:producttype",
+            "order:delivery:confirmationaddress:producttype:product",
+            "order:delivery:confirmationaddress:producttype:product:amount",
+            "order:takeaway",
+            "order:takeaway:filial",
+            "order:takeaway:filial:producttype",
+            "order:takeaway:filial:producttype:product",
+            "order:takeaway:filial:producttype:product:amount",
+            "cart"
         };
 
         private static readonly Dictionary<long, string?> userStates = new();

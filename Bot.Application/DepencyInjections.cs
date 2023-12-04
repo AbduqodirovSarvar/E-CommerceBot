@@ -1,8 +1,14 @@
 ﻿using Bot.Application.Interfaces;
+using Bot.Application.Interfaces.DbInterfaces;
+using Bot.Application.Interfaces.FileServiceInterfaces;
+using Bot.Application.Interfaces.HandleInterfaces;
+using Bot.Application.Interfaces.KeyboardServiceInterfaces;
+using Bot.Application.Interfaces.UseCaseInterfaces;
 using Bot.Application.Services.CacheServices;
 using Bot.Application.Services.FileServices;
 using Bot.Application.Services.HandleServices;
 using Bot.Application.Services.KeyboardServices;
+using Bot.Application.Services.UseCases;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
@@ -33,6 +39,10 @@ namespace Bot.Application
             _services.AddScoped<ISettingService, SettingsService>();
             _services.AddScoped<IUpdateHandler, UpdateHander>();
             _services.AddScoped<IRegisterService, RegisterService>();
+            _services.AddScoped<IFilialServices, FilialServices>();
+            _services.AddScoped<IProductServices, ProductServices>();
+            _services.AddScoped<IOrderDeliveryService, OrderDeliveryService>();
+            _services.AddScoped<IOrderTakeawayService, OrderTakeawayService>();
             return _services;
         }
     }

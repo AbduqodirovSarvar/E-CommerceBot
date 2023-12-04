@@ -11,7 +11,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using User = Bot.Domain.Entities.User;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.HandleInterfaces
 {
     public interface IMainMenuService
     {

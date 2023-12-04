@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.DbInterfaces
 {
     public interface IRedisService
     {

@@ -19,6 +19,9 @@ namespace Bot.Application.Services.KeyboardServices
         public static readonly string[] feedbackAnswer = new[] { "Befarq bo'lmaganingiz uchun raxmat!", "Thank you for not being indifferent!", "Спасибо, что не остались равнодушными!" };
         public static readonly string[] chooseFilial = new[] { "Filialni tanglang:", "Choose Filial:", "Выберите филиал:" };
         public static readonly string[] helpMessages = new[] { "Assalomu aleykum\nBotimizdan foydalanish uchun /start buyrug'ini bosing!", "Hello\nClick /start to use our bot!", "Здравствуйте!\nНажмите /начать, чтобы использовать нашего бота!" };
+        public static readonly string[] askLocation = new[] { "Joylashuvingizni pastdagi tugma orqali yuboring:", "Submit your location using the button below:", "Отправьте свое местоположение, используя кнопку ниже:" };
+        public static readonly string[] askAmount = new[] { "Maxsulot sonini kiriting: ", "Enter the product number:", "Введите номер продукта:" };
+        public static readonly string[] yourCart = new[] { "Sizning savatchangiz:", "Your shopping cart:", "Ваша Корзина:" };
 
         public static readonly string[,] MainMenuButtons = new string[,]
         {
@@ -43,6 +46,21 @@ namespace Bot.Application.Services.KeyboardServices
         public static readonly string[] ShareContactButtons = new string[]
         {
             "Kantaktni ulashish", "Share a contact", "Поделиться контактом"
+        };
+
+        public static readonly string[] BackButtons = new string[]
+        {
+            "Orqaga", "Share a contact", "Поделиться контактом"
+        };
+
+        public static readonly string[] MakeOrderButtons = new string[]
+        {
+            "Buyurtma qilish", "Back", "Назад"
+        };
+
+        public static readonly string[] ShareLocationButtons = new string[]
+        {
+            "Joylashuvni ulashish", "Location sharing", "Передача местоположения"
         };
 
         public static readonly string[,] OrderMenuButtons = new string[,]

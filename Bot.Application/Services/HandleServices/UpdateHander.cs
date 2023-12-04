@@ -1,4 +1,6 @@
 ﻿using Bot.Application.Interfaces;
+using Bot.Application.Interfaces.DbInterfaces;
+using Bot.Application.Interfaces.HandleInterfaces;
 using Bot.Application.Services.KeyboardServices;
 using Bot.Application.Services.StateManagement;
 using Bot.Domain.Entities;
@@ -27,6 +29,7 @@ namespace Bot.Application.Services.HandleServices
         private readonly ISettingService _settingService;
         private readonly IRedisService _redisService;
         private readonly IAppDbContext _context;
+        private readonly IOrderTakeawayService _orderTakeawayService;
         public UpdateHander(
             ILogger<UpdateHander> logger,
             IRegisterService registerService,
@@ -36,7 +39,8 @@ namespace Bot.Application.Services.HandleServices
             IInformationService informationService,
             ISettingService settingService,
             IRedisService redisService,
-            IAppDbContext appDbContext
+            IAppDbContext appDbContext,
+            IOrderTakeawayService orderTakeawayService
             )
         {
             _logger = logger;
@@ -48,6 +52,7 @@ namespace Bot.Application.Services.HandleServices
             _settingService = settingService;
             _redisService = redisService;
             _context = appDbContext;
+            _orderTakeawayService = orderTakeawayService;
         }
         
 
@@ -83,7 +88,10 @@ namespace Bot.Application.Services.HandleServices
             {
                 "order" => _orderService.CatchMessage(message, user, userState, cancellationToken),
                 "order:delivery" => _orderService.CatchMessage(message, user, userState, cancellationToken),
-                "order:takeaway" => _orderService.CatchMessage(message, user, userState, cancellationToken),
+                "order:takeaway:filial" => _orderTakeawayService.CatchMessage(message, user, userState, cancellationToken),
+                "order:takeaway:filial:producttype" => _orderTakeawayService.CatchMessage(message, user, userState, cancellationToken),
+                "order:takeaway:filial:producttype:product" => _orderTakeawayService.CatchMessage(message, user, userState, cancellationToken),
+                "order:takeaway:filial:producttype:product:amount" => _orderTakeawayService.CatchMessage(message, user, userState, cancellationToken),
                 "order:delivery:address" => _orderService.CatchMessage(message, user, userState, cancellationToken),
                 "order:delivery:confirmationaddress" => _orderService.CatchMessage(message, user, userState, cancellationToken),
 
@@ -118,6 +126,10 @@ namespace Bot.Application.Services.HandleServices
             }
 
             var userState = StateService.Get(callbackQuery.From.Id);
+            if(userState == null)
+            {
+                return;
+            }
 
             var forward = userState switch
             {

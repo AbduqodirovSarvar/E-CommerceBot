@@ -1,5 +1,5 @@
 ﻿using Bot.Application.EntityTypeConfigurations;
-using Bot.Application.Interfaces;
+using Bot.Application.Interfaces.DbInterfaces;
 using Bot.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.Infrasturcture.Db
+namespace Bot.Infrastructure.Db
 {
     public class AppDbContext : DbContext, IAppDbContext
     {

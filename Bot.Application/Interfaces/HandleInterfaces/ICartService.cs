@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using User = Bot.Domain.Entities.User;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.HandleInterfaces
 {
-    public interface IInformationService
+    public interface ICartService
     {
         Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken);
-        Task CatchCallbackData(CallbackQuery query, User user, string state, CancellationToken cancellationToken);
     }
 }

@@ -1,4 +1,4 @@
-﻿using Bot.Application.Interfaces;
+﻿using Bot.Application.Interfaces.FileServiceInterfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
@@ -38,7 +38,7 @@ namespace Bot.Application.Services.FileServices
             }
         }
 
-        public Stream? Get(string fullFilePath)
+        public FileStream? Get(string fullFilePath)
         {
             try
             {

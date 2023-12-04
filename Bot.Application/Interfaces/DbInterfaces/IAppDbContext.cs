@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.DbInterfaces
 {
     public interface IAppDbContext
     {
@@ -16,6 +16,6 @@ namespace Bot.Application.Interfaces
         DbSet<Product> Products { get; set; }
         DbSet<ProductType> ProductTypes { get; set; }
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken=default);
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

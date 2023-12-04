@@ -10,11 +10,12 @@ services:
       - redis
     ports:
       - "8443:8443"
+      - "443:443"
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=E-CommerceBotDb;User Id=postgres;Password=12345
       - ConnectionStrings__Redis=localhost:6379
       - BotConfiguration__BotToken=6938864415:AAFOoRGsyop4EztK2e5zS4bcDflR78Ze_rI
-      - BotConfiguration__HostAddress=https://0fb9-188-113-196-17.ngrok-free.app
+      - BotConfiguration__HostAddress=https://fb94-188-113-194-63.ngrok-free.app
       - BotConfiguration__SecretKey=qwertyuiop
       - BotConfiguration__Route=/api/bot
       - ASPNETCORE_ENVIRONMENT=Development
@@ -24,6 +25,8 @@ services:
 
   redis:
     image: redis:latest
+    restart: unless-stopped
+    container_name: redis
     ports:
       - "6379:6379"
     volumes:

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Telegram.Bot.Types;
 using User = Bot.Domain.Entities.User;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.HandleInterfaces
 {
-    public interface IOrderService
+    public interface IFeedbackService
     {
         Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken);
     }

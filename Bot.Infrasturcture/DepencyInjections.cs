@@ -1,5 +1,5 @@
-﻿using Bot.Application.Interfaces;
-using Bot.Infrasturcture.Db;
+﻿using Bot.Application.Interfaces.DbInterfaces;
+using Bot.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bot.Infrasturcture
+namespace Bot.Infrastructure
 {
     public static class DepencyInjections
     {

@@ -1,4 +1,7 @@
 ﻿using Bot.Application.Interfaces;
+using Bot.Application.Interfaces.DbInterfaces;
+using Bot.Application.Interfaces.HandleInterfaces;
+using Bot.Application.Interfaces.KeyboardServiceInterfaces;
 using Bot.Application.Services.KeyboardServices;
 using Bot.Application.Services.StateManagement;
 using Bot.Domain.Enums;

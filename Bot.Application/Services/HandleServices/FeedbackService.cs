@@ -1,7 +1,6 @@
-﻿using Bot.Application.Interfaces;
+﻿using Bot.Application.Interfaces.HandleInterfaces;
 using Bot.Application.Services.KeyboardServices;
 using Bot.Application.Services.StateManagement;
-using Bot.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

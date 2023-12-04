@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Bot.Application.Interfaces
+namespace Bot.Application.Interfaces.KeyboardServiceInterfaces
 {
     public interface IReplyKeyboardService
     {
