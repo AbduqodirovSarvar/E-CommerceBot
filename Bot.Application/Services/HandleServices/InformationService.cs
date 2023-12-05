@@ -66,13 +66,12 @@ namespace Bot.Application.Services.HandleServices
 
         private Task ReceivedBackCallbackData(CallbackQuery query, User user, string state, CancellationToken cancellationToken)
         {
-
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         private Task ReceivedNextCallbackData(CallbackQuery query, User user, string state, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

@@ -125,16 +125,12 @@ namespace Bot.Application.Services.HandleServices
                 _ => new Dictionary<string, string> { { "Бывший", "back" }, { "Следующий", "next" } },
             };
 
+            dict1.Concat(dict2);
+
 
             await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
                 text: ReplyMessages.chooseFilial[(int)user.Language],
-                replyMarkup: _inlineKeyboardService.CreateKeyboardMarkup(dict1),
-                cancellationToken: cancellationToken);
-
-            await _client.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: "",
                 replyMarkup: _inlineKeyboardService.CreateKeyboardMarkup(dict1),
                 cancellationToken: cancellationToken);
 
