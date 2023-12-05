@@ -137,10 +137,6 @@ namespace Bot.Application.Services.HandleServices
             }
 
             var userState = StateService.Get(callbackQuery.From.Id);
-            if(userState == null)
-            {
-                return;
-            }
 
             var forward = userState switch
             {
