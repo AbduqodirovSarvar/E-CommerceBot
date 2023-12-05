@@ -55,7 +55,17 @@ namespace Bot.Application.Services.KeyboardServices
 
         public static readonly string[] MakeOrderButtons = new string[]
         {
-            "Buyurtma qilish", "Back", "Назад"
+            "Buyurtma qilish", "Make order", "сделать заказ"
+        };
+
+        public static readonly string[] BackButton = new string[]
+        {
+            "Orqaga", "Back", "Назад"
+        };
+
+        public static readonly string[] MakeClearButton = new string[]
+        {
+            "Tozalash", "Cleaning", "Очистка"
         };
 
         public static readonly string[] ShareLocationButtons = new string[]

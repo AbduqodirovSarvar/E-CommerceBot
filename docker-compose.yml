@@ -1,25 +1,23 @@
 version: '3.8'
 
 services:
-  bot:
+  bot.api:
+    container_name: botapi
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Bot.Api/Dockerfile
     depends_on:
       - db
       - redis
     ports:
       - "8443:8443"
-      - "443:443"
     environment:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=E-CommerceBotDb;User Id=postgres;Password=12345
-      - ConnectionStrings__Redis=localhost:6379
+      - ConnectionStrings__Redis=redis:6379
       - BotConfiguration__BotToken=6938864415:AAFOoRGsyop4EztK2e5zS4bcDflR78Ze_rI
-      - BotConfiguration__HostAddress=https://fb94-188-113-194-63.ngrok-free.app
+      - BotConfiguration__HostAddress=https://cacc-82-215-114-176.ngrok-free.app
       - BotConfiguration__SecretKey=qwertyuiop
       - BotConfiguration__Route=/api/bot
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8443
     networks:
       - ecommerce
 

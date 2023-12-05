@@ -30,6 +30,7 @@ namespace Bot.Application.Services.HandleServices
         private readonly IRedisService _redisService;
         private readonly IAppDbContext _context;
         private readonly IOrderTakeawayService _orderTakeawayService;
+        private readonly ICartService _cartService;
         public UpdateHander(
             ILogger<UpdateHander> logger,
             IRegisterService registerService,
@@ -40,7 +41,8 @@ namespace Bot.Application.Services.HandleServices
             ISettingService settingService,
             IRedisService redisService,
             IAppDbContext appDbContext,
-            IOrderTakeawayService orderTakeawayService
+            IOrderTakeawayService orderTakeawayService,
+            ICartService cartService
             )
         {
             _logger = logger;
@@ -53,6 +55,7 @@ namespace Bot.Application.Services.HandleServices
             _redisService = redisService;
             _context = appDbContext;
             _orderTakeawayService = orderTakeawayService;
+            _cartService = cartService;
         }
         
 
@@ -83,6 +86,12 @@ namespace Bot.Application.Services.HandleServices
                 await _redisService.SetObjectAsync(user.Id.ToString(), user);
             }
 
+            if(message.Text == "/start" || message.Text == "/help")
+            {
+                await _mainMenuService.CatchMessage(message, user, cancellationToken);
+                return;
+            }
+
             var userState = StateService.Get(message.Chat.Id);
             var forward = userState switch
             {
@@ -96,6 +105,8 @@ namespace Bot.Application.Services.HandleServices
                 "order:delivery:confirmationaddress" => _orderService.CatchMessage(message, user, userState, cancellationToken),
 
                 "feedback" => _feedbackService.CatchMessage(message, user, userState, cancellationToken),
+
+                "cart" => _cartService.CatchMessage(message, user, userState, cancellationToken),
 
                 "information" => _informationService.CatchMessage(message, user, userState, cancellationToken),
                 "information:filial" => _informationService.CatchMessage(message, user, userState, cancellationToken),

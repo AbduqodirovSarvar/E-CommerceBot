@@ -91,6 +91,7 @@ namespace Bot.Application.Services.HandleServices
                     cancellationToken: cancellationToken);
                 return;
             }
+
             var products = _context.Products.Where(x => orders.Select(x => x.ProductId).Contains(x.Id)).ToList();
 
             var keyboard = (products.Select(x => user.Language == Language.uz ? x.NameUZ
@@ -110,6 +111,7 @@ namespace Bot.Application.Services.HandleServices
             }
 
             keyboard.Add(ReplyMessages.MakeOrderButtons[(int)user.Language]);
+            keyboard.Add(ReplyMessages.MakeClearButton[(int)user.Language]);
             keyboard.Add(ReplyMessages.BackButtons[(int)user.Language]);
 
             await _client.SendTextMessageAsync(

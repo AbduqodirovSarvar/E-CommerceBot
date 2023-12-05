@@ -39,6 +39,9 @@ namespace Bot.Application.Services.HandleServices
             _client = client;
             _fileService = fileService;
         }
+
+        private static readonly string[] backButton = new string[] { "Orqaga", "Back", "Назад" };
+
         public async Task CatchMessage(Message message, User user, string state, CancellationToken cancellationToken)
         {
             var forward = state switch
@@ -141,6 +144,11 @@ namespace Bot.Application.Services.HandleServices
 
         private async Task ReceivedProductType(Message message, User user, string state, CancellationToken cancellationToken)
         {
+            if (message.Text == "Orqaga" || message.Text == "Back" || message.Text == "Назад")
+            {
+                await ShowOrdersMenu(message, user, state, cancellationToken);
+                return;
+            }
             var type = await _context.ProductTypes
                                 .FirstOrDefaultAsync(x => x.NameEN == message.Text
                                     || x.NameRU == message.Text
@@ -171,6 +179,11 @@ namespace Bot.Application.Services.HandleServices
 
         private async Task ReceivedFilialOrBackButton(Message message, User user, string state, CancellationToken cancellationToken)
         {
+            if(message.Text == "Orqaga" || message.Text == "Back" || message.Text == "Назад")
+            {
+                await ShowOrdersMenu(message, user, state, cancellationToken);
+                return;
+            }
             var filial = await _context.Filials
                             .FirstOrDefaultAsync(x => x.NameEN == message.Text 
                                 || x.NameRU == message.Text
@@ -190,6 +203,8 @@ namespace Bot.Application.Services.HandleServices
                                                     : user.Language == Language.en ? x.NameEN
                                                         : x.NameRU)
                                             .ToListAsync(cancellationToken);
+
+            types.Add(backButton[(int)user.Language]);
 
             await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
@@ -214,11 +229,22 @@ namespace Bot.Application.Services.HandleServices
 
             using (var photoStream = new FileStream(product.ImagePath, FileMode.Open))
             {
-                await _client.SendPhotoAsync(
+                try
+                {
+                    await _client.SendPhotoAsync(
                     Id,
                     InputFile.FromStream(photoStream),
                     caption: caption,
                     cancellationToken: cancellationToken);
+                }
+                catch 
+                {
+                    await _client.SendTextMessageAsync(
+                        chatId: Id,
+                        text: caption,
+                        cancellationToken: cancellationToken);
+                }
+
             }
             return;
         }

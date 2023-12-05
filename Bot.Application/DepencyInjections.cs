@@ -43,6 +43,7 @@ namespace Bot.Application
             _services.AddScoped<IProductServices, ProductServices>();
             _services.AddScoped<IOrderDeliveryService, OrderDeliveryService>();
             _services.AddScoped<IOrderTakeawayService, OrderTakeawayService>();
+            _services.AddScoped<ICartService, CartService>();
             return _services;
         }
     }
