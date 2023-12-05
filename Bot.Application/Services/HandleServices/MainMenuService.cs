@@ -125,7 +125,10 @@ namespace Bot.Application.Services.HandleServices
                 _ => new Dictionary<string, string> { { "Бывший", "back" }, { "Следующий", "next" } },
             };
 
-            dict1.Concat(dict2);
+            foreach(var kvp in dict2)
+            {
+                dict1.Add(kvp.Key, kvp.Value);
+            }
 
 
             await _client.SendTextMessageAsync(

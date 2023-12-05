@@ -39,8 +39,9 @@ namespace Bot.Application.Services.HandleServices
                     chatId: id,
                     text: $"New feedback:\nFrom: {message.Chat.Id}",
                     cancellationToken: cancellationToken);
+
                 await _client.ForwardMessageAsync(
-                        chatId: message.Chat.Id,
+                        chatId: id,
                         fromChatId: message.Chat.Id,
                         messageId: message.MessageId,
                         cancellationToken: cancellationToken);
