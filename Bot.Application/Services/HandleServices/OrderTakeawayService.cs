@@ -131,14 +131,21 @@ namespace Bot.Application.Services.HandleServices
 
             order.ProductId = product.Id;
 
-            await SendInformationAboutProduct(message.Chat.Id, user, product, cancellationToken);
+            try
+            {
+                await SendInformationAboutProduct(message.Chat.Id, user, product, cancellationToken);
 
-            await _client.SendTextMessageAsync(
-                chatId: message.Chat.Id,
-                text: ReplyMessages.askAmount[(int)user.Language],
-                cancellationToken: cancellationToken);
+                await _client.SendTextMessageAsync(
+                    chatId: message.Chat.Id,
+                    text: ReplyMessages.askAmount[(int)user.Language],
+                    cancellationToken: cancellationToken);
 
-            await StateService.Set(message.Chat.Id, "order:takeaway:filial:producttype:product:amount");
+                await StateService.Set(message.Chat.Id, "order:takeaway:filial:producttype:product:amount");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return;
         }
 
@@ -167,13 +174,20 @@ namespace Bot.Application.Services.HandleServices
 
             var keyboard = _replyKeyboardService.CreateKeyboardMarkup(products);
 
-            await _client.SendTextMessageAsync(
+            try
+            {
+                await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: "dbsjfj",
+                text: ReplyMessages.chooseCommand[(int)user.Language],
                 replyMarkup: keyboard,
                 cancellationToken: cancellationToken);
 
-            await StateService.Set(message.Chat.Id, "order:takeaway:filial:producttype:product");
+                await StateService.Set(message.Chat.Id, "order:takeaway:filial:producttype:product");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
             return;
         }
 
@@ -206,13 +220,20 @@ namespace Bot.Application.Services.HandleServices
 
             types.Add(backButton[(int)user.Language]);
 
-            await _client.SendTextMessageAsync(
+            try
+            {
+                await _client.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: "asdjnjnd",
+                text: ReplyMessages.chooseCommand[(int)user.Language],
                 replyMarkup: _replyKeyboardService.CreateKeyboardMarkup(types),
                 cancellationToken: cancellationToken);
 
-            await StateService.Set(message.Chat.Id, "order:takeaway:filial:producttype");
+                await StateService.Set(message.Chat.Id, "order:takeaway:filial:producttype");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message.ToString());
+            }
 
             return;
         }

@@ -45,8 +45,9 @@ namespace Bot.Application.Services.FileServices
                 using var stream = File.OpenRead(fullFilePath);
                 return stream;
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogInformation(message: "Error getting file process: {ex.Message}", ex.Message);
                 return null;
             }
         }
