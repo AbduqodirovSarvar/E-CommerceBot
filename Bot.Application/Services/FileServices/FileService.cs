@@ -23,13 +23,12 @@ namespace Bot.Application.Services.FileServices
             {
                 string currentFolderPath = Directory.GetCurrentDirectory();
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                string filePath = Path.Combine(currentFolderPath, "..", "Bot.Application", "Files", "Images", fileName);
-                string fullPath = Path.GetFullPath(filePath);
-                using (var stream = new FileStream(fullPath, FileMode.Create))
+                string filePath = filePath = Path.Combine(currentFolderPath, "Files", "Images", fileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
-                return fullPath;
+                return filePath;
             }
             catch (Exception ex)
             {

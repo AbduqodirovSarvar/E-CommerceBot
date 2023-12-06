@@ -42,7 +42,7 @@ namespace Bot.Application.Services.UseCases
                 DescriptionUZ = productDto.DescriptionUZ,
                 Price = productDto.Price,
                 TypeId = productDto.TypeId,
-                ImagePath = await _fileService.Save(productDto.Image)
+                ImagePath = await _fileService.Save(productDto.Image!)
             };
 
             await _context.Products.AddAsync(product, cancellationToken);
@@ -65,11 +65,7 @@ namespace Bot.Application.Services.UseCases
 
         public async Task<bool> DeleteProduct(int id, CancellationToken cancellationToken)
         {
-            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-            if(product == null)
-            {
-                throw new Exception();
-            }
+            var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id, cancellationToken) ?? throw new Exception();
 
             _context.Products.Remove(product);
             return (await _context.SaveChangesAsync(cancellationToken)) > 0;
@@ -77,11 +73,7 @@ namespace Bot.Application.Services.UseCases
 
         public async Task<bool> DeleteProductType(int id, CancellationToken cancellationToken)
         {
-            var productType = await _context.ProductTypes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
-            if (productType == null)
-            {
-                throw new Exception();
-            }
+            var productType = await _context.ProductTypes.FirstOrDefaultAsync(x => x.Id == id, cancellationToken) ?? throw new Exception();
 
             _context.ProductTypes.Remove(productType);
             return (await _context.SaveChangesAsync(cancellationToken)) > 0;
@@ -109,7 +101,7 @@ namespace Bot.Application.Services.UseCases
         public string? DescriptionEN { get; set; }
         public string? DescriptionRU { get; set; }
         public double Price { get; set; }
-        public IFormFile Image { get; set; }
+        public IFormFile? Image { get; set; }
         public int TypeId { get; set; }
     }
 }

@@ -33,4 +33,8 @@
     <None Remove="..\.dockerignore" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Files\Images\" />
+  </ItemGroup>
+
 </Project>
