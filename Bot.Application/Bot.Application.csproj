@@ -21,8 +21,4 @@
     <ProjectReference Include="..\Bot.Domain\Bot.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Files\Images\" />
-  </ItemGroup>
-
 </Project>
